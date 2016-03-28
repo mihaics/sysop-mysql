@@ -13,7 +13,7 @@ if [ ! -d "$DATADIR/mysql" ]; then
  dpkg-reconfigure -f noninteractive  $MYSQL_SERVER
 fi
 
-if [ "$CREATE_DATABASE" = "true" ]
+if [ "$CREATE_DATABASE" = "true" ]; then
 #MYSQL_DBNAME
 #MYSQL_DBUSER
 #MYSQL_DBPASSWORD
