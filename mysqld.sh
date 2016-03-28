@@ -13,6 +13,17 @@ if [ ! -d "$DATADIR/mysql" ]; then
  dpkg-reconfigure -f noninteractive  $MYSQL_SERVER
 fi
 
+if [ "$CREATE_DATABASE" = "true" ]
+#MYSQL_DBNAME
+#MYSQL_DBUSER
+#MYSQL_DBPASSWORD
+# echo "SQL_STATEMENT" |  mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
+ echo "CREATE DATABASE ${MYSQL_DBNAME};" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
+ echo "CREATE USER ${MYSQL_DBUSER}@'%' IDENTIFIED BY '${MYSQL_DBPASSWORD}';" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
+ echo "GRANT ALL ON ${MYSQL_DBNAME}.* TO ${MYSQL_DBUSER}@'%' WITH GRANT OPTION;" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
+fi
+
+
 
 exec mysqld_safe
 
