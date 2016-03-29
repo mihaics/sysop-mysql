@@ -13,8 +13,20 @@ if [ ! -d "$DATADIR/mysql" ]; then
  dpkg-reconfigure -f noninteractive  $MYSQL_SERVER
 fi
 
+if [ -z "ETCD_SRV_ADDR" ]; then 
+  ETCD_SRV_ADDR='172.17.0.1'
+fi
 
-sleep 30
+
+if [ -z "MYSQL_DBNAME" ] && [ -z "MYSQL_DB_USER" ] && [ -z "MYSQL_DBPASSWORD" ]; then
+ export MYSQL_DBNAME=$(curl -L http://$ETCD_SRV_ADDR:2379/v2/keys/$ACCOUNT_ID/$CLIENT_ID/MYSQL_DBNAME | jq '.node.value' | sed 's/\"//g'  )
+ export MYSQL_DBUSER=$(curl -L http://$ETCD_SRV_ADDR:2379/v2/keys/$ACCOUNT_ID/$CLIENT_ID/MYSQL_DBUSER | jq '.node.value' | sed 's/\"//g'  )
+ export MYSQL_DBPASSWORD=$(curl -L http://$ETCD_SRV_ADDR:2379/v2/keys/$ACCOUNT_ID/$CLIENT_ID/MYSQL_DBPASSWORD | jq '.node.value' | sed 's/\"//g'  )
+ export CREATE_DATABASE=$(curl -L http://$ETCD_SRV_ADDR:2379/v2/keys/$ACCOUNT_ID/$CLIENT_ID/CREATE_DATABASE | jq '.node.value' | sed 's/\"//g'  )
+fi
+
+
+
 
 if [ "$CREATE_DATABASE" = "true" ]; then
 #MYSQL_DBNAME
@@ -27,6 +39,7 @@ if [ "$CREATE_DATABASE" = "true" ]; then
  echo "GRANT ALL ON ${MYSQL_DBNAME}.* TO ${MYSQL_DBUSER}@'%' WITH GRANT OPTION;" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
  killall mysqld_safe & sleep 3s
  killall -9 mysqld_safe & sleep 2s
+ curl -XPUT http://$ETCD_SRV_ADDR:2379/v2/keys/$ACCOUNT_ID/$CLIENT_ID/CREATE_DATABASE?prevExist=true -d value="false";
 fi
 
 

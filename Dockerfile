@@ -19,11 +19,12 @@ ADD authorized_keys /tmp/authorized_keys
 RUN cat /tmp/authorized_keys > /root/.ssh/authorized_keys && rm -f /tmp/authorized_keys
 
 RUN groupadd -r mysql && useradd -r -g mysql mysql
-RUN apt-get update && apt-get install -y perl pwgen --no-install-recommends && rm -rf /var/lib/apt/lists/*
-RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A4A9406876FCBD3C456770C88C718D3B5072E1F5
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y perl pwgen --no-install-recommends \ 
+    && apt-get install -y curl unzip  sudo tar software-properties-common python-jinja2 python-pip jq git
+RUN pip install j2cli
 
-
-RUN apt-get update && apt-get install -y ${MYSQL_SERVER} && rm -rf /var/lib/apt/lists/* \
+RUN  apt-get install -y ${MYSQL_SERVER} \
     && rm -rf /var/lib/mysql && mkdir -p /var/lib/mysql
 
 RUN sed -Ei 's/^(bind-address|log)/#&/' /etc/mysql/my.cnf \
