@@ -18,9 +18,8 @@ fi
 if [ "$CREATE_DATABASE" = "true" ]; then
 # echo "SQL_STATEMENT" |  mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
  mysqld_safe & sleep 10s
- echo "CREATE DATABASE ${MYSQL_DBNAME};" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
- echo "CREATE USER ${MYSQL_DBUSER}@'%' IDENTIFIED BY '${MYSQL_DBPASSWORD}';" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
- echo "GRANT ALL ON ${MYSQL_DBNAME}.* TO ${MYSQL_DBUSER}@'%' WITH GRANT OPTION;" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
+ echo "CREATE DATABASE IF NOT EXISTS ${MYSQL_DBNAME};" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
+ echo "GRANT ALL ON ${MYSQL_DBNAME}.* TO ${MYSQL_DBUSER}@'%' IDENTIFIED BY '${MYSQL_DBPASSWORD}'  WITH GRANT OPTION;" | mysql -u root --password="${MYSQL_ROOT_PASSWORD}"
  killall mysqld_safe & sleep 3s
  killall -9 mysqld_safe & sleep 2s
 fi
