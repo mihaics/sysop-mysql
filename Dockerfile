@@ -20,9 +20,7 @@ RUN cat /tmp/authorized_keys > /root/.ssh/authorized_keys && rm -f /tmp/authoriz
 
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y perl pwgen --no-install-recommends \ 
-    && apt-get install -y curl unzip  sudo tar software-properties-common python-jinja2 python-pip jq git
-RUN pip install j2cli
+RUN apt-get install -y perl pwgen --no-install-recommends 
 
 RUN  apt-get install -y ${MYSQL_SERVER} \
     && rm -rf /var/lib/mysql && mkdir -p /var/lib/mysql
