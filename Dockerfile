@@ -4,6 +4,7 @@
 # https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
 # for a list of version numbers.
 FROM phusion/baseimage:0.9.18
+MAINTAINER "Mihai Csaky" <mihai.csaky@sysop-consulting.ro>
 
 
 # Use baseimage-docker's init system.
